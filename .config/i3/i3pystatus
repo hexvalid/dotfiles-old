@@ -1,9 +1,7 @@
 import subprocess
 import re
-#from os.path import expanduser
 from i3pystatus import Status
 
-#homedir = expanduser("~")
 xresources = open('.Xresources', 'r').read()
 maincolor =  "".join(re.findall(r'color4:\t\t(.*?)\n',xresources,re.DOTALL))
 urgentcolor =  "".join(re.findall(r'color1:\t\t(.*?)\n',xresources,re.DOTALL))
@@ -82,13 +80,16 @@ status.register(
 status.register(
         "network",
         hints = {"markup": "pango"},
-        format_up = "<span color='{0}'>".format(maincolor)+"net:</span>{kbs}",
+        format_up = "<span color='{0}'>".format(maincolor)+"net:</span>{bytes_sent}/{bytes_recv}",
   	interface = "wlo1",
 	color_up = foregroundcolor,
-	color_down = urgentcolor, 
-        format_down = "", 
+	color_down = foregroundcolor, 
+        format_down = "<span color='{0}'>".format(maincolor)+"net:</span><span color='{0}'>".format(urgentcolor)+"down</span>",
 	dynamic_color = False,
 )
+
+
+
 
 
 status.register(

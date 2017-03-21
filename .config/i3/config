@@ -38,7 +38,7 @@ bindsym Ctrl+$mod+1	exec --no-startup-id $webbrowser
 bindsym Ctrl+$mod+2	exec --no-startup-id $filemanager
 bindsym Ctrl+$mod+3	exec --no-startup-id $telegram
 bindsym $mod+Shift+t	exec --no-startup-id $terminal
-bindsym $mod+d		exec --no-startup-id dmenu_run -fn 'Gohu GohuFont-9' -h 11 -l 0 -nb '$barbackground' -nf '$barstatusline'  -sb '$barbackground' -sf '$focusedws3'
+bindsym $mod+d		exec --no-startup-id dmenu_run -class 'dmenu' -fn 'Gohu GohuFont-9' -h 11 -l 0 -nb '$barbackground' -nf '$barstatusline'  -sb '$barbackground' -sf '$focusedws3'
 
 
 # workspace assings

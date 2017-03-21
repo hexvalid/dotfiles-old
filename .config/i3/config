@@ -1,0 +1,243 @@
+###			HexValid's i3-gaps config			###
+##		  Based on ErkanMDR's and hbers's config		 ##
+#  Version: 0.5						   CodeName: iMa  #
+
+set_from_resource $barbackground	i3wm.barbackground	#000000
+set_from_resource $barstatusline 	i3wm.barstatusline	#000000
+set_from_resource $barseparator		i3wm.barseparator	#000000
+set_from_resource $focusedws1		i3wm.focusedws1		#000000
+set_from_resource $focusedws2		i3wm.focusedws2		#000000
+set_from_resource $focusedws3		i3wm.focusedws3		#000000
+set_from_resource $activews1		i3wm.activews1		#000000
+set_from_resource $activews2		i3wm.activews2		#000000
+set_from_resource $activews3		i3wm.activews3		#000000
+set_from_resource $inactivews1		i3wm.inactivews1	#000000
+set_from_resource $inactivews2		i3wm.inactivews2	#000000
+set_from_resource $inactivews3		i3wm.inactivews3	#000000
+set_from_resource $urgentws1		i3wm.urgentws1		#000000
+set_from_resource $urgentws2		i3wm.urgentws2		#000000
+set_from_resource $urgentws3		i3wm.urgentws3          #000000 
+set_from_resource $focusedclient	i3wm.focusedclient      #000000 
+set_from_resource $focusedinclient	i3wm.focusedinclient	#000000 
+set_from_resource $unfocusedclient	i3wm.unfocusedclient	#000000 
+
+
+# main keybinder
+set $mod Mod4
+
+
+# default apps
+set	$terminal		urxvtc
+set	$webbrowser		inox
+set	$filemanager		thunar
+set	$telegram		telegram-desktop
+
+
+# launch keybindings
+bindsym Ctrl+$mod+1	exec --no-startup-id $webbrowser
+bindsym Ctrl+$mod+2	exec --no-startup-id $filemanager
+bindsym Ctrl+$mod+3	exec --no-startup-id $telegram
+bindsym $mod+Shift+t	exec --no-startup-id $terminal
+bindsym $mod+d		exec --no-startup-id dmenu_run -fn 'Gohu GohuFont-9' -h 11 -l 0 -nb '$barbackground' -nf '$barstatusline'  -sb '$barbackground' -sf '$focusedws3'
+
+
+# workspace assings
+assign [class="inox"]			$w1
+assign [class="jetbrains-idea-ce"]	$w3
+assign [class="jetbrains-idea"]		$w3
+assign [class="^telegram-desktop$"]	$w4
+assign [class="^Steam$"]		$w4
+assign [title="Steam"]			$w4
+assign [class="hl2_linux"]              $w5
+assign [class="VBoxSDL"]		$w6
+
+
+# special app configs
+for_window [class="^Dunst$"] floating enable, border pixel 5
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="(?i)telegram"] floating enable
+for_window [class="^Steam$"] border none
+
+
+# workspaces
+set $w1 1:net
+set $w2 2:term
+set $w3 3:dev
+set $w4 4:freeup
+set $w5 5:sdl
+set $w6 6:eval
+set $w7 7:control
+set $w8 8:manifacturing
+set $w9 9:interactive
+set $w10 10:void
+
+
+# startup apps
+exec --no-startup-id setxkbmap tr
+exec --no-startup-id feh --bg-center pictures/eva.jpg
+exec --no-startup-id nm-applet
+exec --no-startup-id urxvtd -q -o -f
+#exec --no-startup-id sleep 1 && xgamma -gamma 0.85
+#exec --no-startup-id dunst
+exec --no-startup-id xrdb .Xresources
+exec --no-startup-id thunar --daemon
+exec --no-startup-id compton --config .config/compton/compton.conf
+
+
+# gaps
+gaps inner 12
+gaps outer 2
+
+
+# border colors
+client.focused		$focusedclient		$focusedclient		$focusedclient		$focusedclient
+client.focused_inactive	$focusedinclient	$focusedinclient	$focusedinclient	$focusedinclient
+client.unfocused	$unfocusedclient	$unfocusedclient	$unfocusedclient	$unfocusedclient
+
+
+# ws switcher
+bindsym Mod1+Tab workspace next
+bindsym Mod1+Shift+Tab workspace prev
+bindsym $mod+Tab workspace back_and_forth
+
+
+# font
+font pango:Gohu GohuFont 9 
+
+# main shortcuts
+floating_modifier $mod
+bindsym $mod+q kill
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+bindsym $mod+h split h
+bindsym $mod+v split v
+bindsym $mod+Shift+r restartconk
+bindsym $mod+f fullscreen toggle
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space focus mode_toggle
+bindsym $mod+a focus parent
+bindsym $mod+z focus child
+bindsym $mod+Ctrl+Shift+e exit
+bindsym $mod+x sticky toggle
+
+
+# ws changer
+bindsym $mod+1 workspace $w1
+bindsym $mod+2 workspace $w2
+bindsym $mod+3 workspace $w3
+bindsym $mod+4 workspace $w4
+bindsym $mod+5 workspace $w5
+bindsym $mod+6 workspace $w6
+bindsym $mod+7 workspace $w7
+bindsym $mod+8 workspace $w8
+bindsym $mod+9 workspace $w9
+bindsym $mod+0 workspace $w10
+
+
+# ws mover
+bindsym $mod+Shift+1 move container to workspace $w1
+bindsym $mod+Shift+2 move container to workspace $w2
+bindsym $mod+Shift+3 move container to workspace $w3
+bindsym $mod+Shift+4 move container to workspace $w4
+bindsym $mod+Shift+5 move container to workspace $w5
+bindsym $mod+Shift+6 move container to workspace $w6
+bindsym $mod+Shift+7 move container to workspace $w7
+bindsym $mod+Shift+8 move container to workspace $w8
+bindsym $mod+Shift+9 move container to workspace $w9
+bindsym $mod+Shift+0 move container to workspace $w10
+
+# reload config
+bindsym $mod+Shift+c reload
+
+# passthrough mode
+mode "passthrough" {
+	bindsym Mod4+Escape mode "default"
+}
+bindsym Mod4+Escape mode "passthrough"
+
+# resize mode
+mode "resize" {
+        bindsym Left	resize shrink width 2 px or 2 ppt
+        bindsym Down	resize grow height 2 px or 2 ppt
+        bindsym Up	resize shrink height 2 px or 2 ppt
+        bindsym Right	resize grow width 2 px or 2 ppt
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+# border tickness
+new_window pixel 2
+new_float pixel 3
+
+# scrot
+bindsym --release Ctrl+Shift+S exec --no-startup-id scrot -s -q 100 /tmp/s.png && xclip -selection clipboard -target image/png -i /tmp/s.png && rm /tmp/s.png
+bindsym --release Ctrl+Alt+S  exec --no-startup-id scrot -u -q 100 /tmp/s.png && xclip -selection clipboard -target image/png -i /tmp/s.png && rm /tmp/s.png
+bindsym --release Ctrl+S exec --no-startup-id scrot -q 100 /tmp/s.png && xclip -selection clipboard -target image/png -i /tmp/s.png && rm /tmp/s.png
+
+
+# bar
+bar {
+	tray_padding -1
+	height 12
+	strip_workspace_numbers no
+#       status_command i3status
+	status_command  python .config/i3/i3pystatus
+	#status_command python .config/i3/i3pystatus -t
+	position top
+	mode dock
+	colors {
+		background	 $barbackground
+		statusline	$barstatusline
+		separator	$barseparator
+		focused_workspace  $focusedws1	$focusedws2	$focusedws3
+		active_workspace   $activews1	$activews2	$activews3
+		inactive_workspace $inactivews1	$iactivews2	$inactivews3
+		urgent_workspace   $urgentws1	$urgentws2	$urgentws3
+		}
+}
+
+# gaps config
+set $mode_gaps boşluklar: (g) içerden, (h) dışardan
+set $mode_gaps_outer dış boşluklar: w|s|d|0 (yerel), Shift + w|s|d|0 (genel)
+set $mode_gaps_inner iç boşluklar: w|s|d|0 (yerel), Shift + w|s|d|0 (genel)
+bindsym $mod+g mode "$mode_gaps"
+mode "$mode_gaps" {
+	bindsym h mode "$mode_gaps_outer"
+	bindsym g mode "$mode_gaps_inner"
+	bindsym Return mode "default"
+	bindsym Escape mode "default"
+}
+mode "$mode_gaps_inner" {
+	bindsym w  gaps inner current plus 5
+	bindsym s gaps inner current minus 5
+	bindsym 0 gaps inner current set 0
+	bindsym d gaps inner current set 3
+	bindsym Shift+w gaps inner all plus 5
+	bindsym Shift+s gaps inner all minus 5
+	bindsym Shift+0 gaps inner all set 0
+	bindsym Shift+d gaps inner all set 3
+	bindsym Return mode "default"
+	bindsym Escape mode "default"
+}
+mode "$mode_gaps_outer" {
+	bindsym w gaps outer current plus 5
+	bindsym s gaps outer current minus 5
+	bindsym 0 gaps outer current set 0
+	bindsym d gaps outer current set 3
+	bindsym Shift+w gaps outer all plus 5
+	bindsym Shift+s gaps outer all minus 5
+	bindsym Shift+0 gaps outer all set 0
+	bindsym Shift+d gaps outer all set 3
+	bindsym Return mode "default"
+	bindsym Escape mode "default"
+}

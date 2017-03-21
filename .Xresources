@@ -1,0 +1,81 @@
+!!!                   HexValids Xresources config                       !!!
+!!									 !!
+!									  !
+
+! urxvt variables
+!URxvt.font: xft:xos4 terminus:size=9
+URxvt.font:  xft:Gohu GohuFont:style=regular:size=9:antialias=false
+URxvt.perl-ext:
+URxvt.perl-ext-common:
+URxvt.internalBorder: 8
+URxvt.letterSpace: 0
+URxvt.saveLines: 1024
+URxvt.tabbed.no-tabbedex-keys: true
+URxvt.scrollBar: false
+URxvt.keysym.Control-Up:    \033[1;5A
+URxvt.keysym.Control-Down:  \033[1;5B
+URxvt.keysym.Control-Left:  \033[1;5D
+URxvt.keysym.Control-Right: \033[1;5C
+URxvt.keysym.C-C: perl:clipboard:copy
+URxvt.keysym.C-V: perl:clipboard:paste
+URxvt.keysym.C-A-V: perl:clipboard:paste_escaped
+urxvt*depth: 32
+urxvt*background: rgba:0000/0000/0200/c800
+
+
+! i3wm colors
+i3wm.barbackground:	#000000
+i3wm.barstatusline:	#D3DAE3
+i3wm.barseparator:	#383C4A
+i3wm.focusedws1:	#000000
+i3wm.focusedws2:	#000000
+i3wm.focusedws3:	#5294E2
+i3wm.activews1:		#000000
+i3wm.activews2:		#000000
+i3wm.activews3:		#00FF00
+i3wm.inactivews1:	#000000
+i3wm.inactivews2:	#000000
+i3wm.inactivews3:	#D3DAE3
+i3wm.urgentws1:		#000000
+i3wm.urgentws2:		#000000
+i3wm.urgentws3:		#D64937
+
+i3wm.focusedclient:	#5294E2
+i3wm.focusedinclient:	#383C4A
+i3wm.unfocusedclient:	#2F343F	
+
+! colors
+*background:		#000000
+*foreground:		#D3DAE3
+
+! black
+*.color0:		#2f1e2e
+*.color8:		#776e71
+
+! red
+*.color1:		#ef6155
+*.color9:		#ef6155
+
+! green
+*.color2:		#48b685
+*.color10:		#48b685
+
+! yellow
+*.color3:		#fec418
+*.color11:		#fec418
+
+! blue
+*.color4:		#5294e2
+*.color12:		#85B7F2
+
+! magenta
+*.color5:		#815ba4
+*.color13:		#815ba4
+
+! cyan
+*.color6:		#5bc4bf
+*.color14:		#5bc4bf
+
+! white
+*.color7:		#a39e9b
+*.color15:		#e7e9db

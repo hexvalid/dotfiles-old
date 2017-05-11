@@ -1,6 +1,6 @@
 ###			HexValid's i3-gaps config			###
 ##		  Based on ErkanMDR's and hbers's config		 ##
-#  Version: 0.5						   CodeName: iMa  #
+#  Version: 0.5.2					   CodeName: iMa  #
 
 set_from_resource $barbackground	i3wm.barbackground	#000000
 set_from_resource $barstatusline 	i3wm.barstatusline	#000000
@@ -28,7 +28,7 @@ set $mod Mod4
 
 # default apps
 set	$terminal		urxvtc
-set	$webbrowser		inox
+set	$webbrowser		chromium
 set	$filemanager		thunar
 set	$telegram		telegram-desktop
 
@@ -38,8 +38,9 @@ bindsym Ctrl+$mod+1	exec --no-startup-id $webbrowser
 bindsym Ctrl+$mod+2	exec --no-startup-id $filemanager
 bindsym Ctrl+$mod+3	exec --no-startup-id $telegram
 bindsym $mod+Shift+t	exec --no-startup-id $terminal
-bindsym $mod+d		exec --no-startup-id dmenu_run -class 'dmenu' -fn 'Gohu GohuFont-9' -h 11 -l 0 -nb '$barbackground' -nf '$barstatusline'  -sb '$barbackground' -sf '$focusedws3'
 
+#bindsym $mod+d		exec --no-startup-id dmenu_run -class 'dmenu' -fn 'Gohu GohuFont-9' -h 11 -l 0 -nb '$barbackground' -nf '$barstatusline'  -sb '$barbackground' -sf '$focusedws3'
+bindsym $mod+d		exec --no-startup-id dmenu_run 
 
 # workspace assings
 assign [class="inox"]			$w1
@@ -74,7 +75,7 @@ set $w10 10:void
 
 # startup apps
 exec --no-startup-id setxkbmap tr
-exec --no-startup-id feh --bg-center pictures/eva.jpg
+exec --no-startup-id feh --bg-center Pictures/rei.jpg
 exec --no-startup-id nm-applet
 exec --no-startup-id urxvtd -q -o -f
 #exec --no-startup-id sleep 1 && xgamma -gamma 0.85
@@ -101,8 +102,11 @@ bindsym Mod1+Shift+Tab workspace prev
 bindsym $mod+Tab workspace back_and_forth
 
 
+#Powerline may not working	
 # font
-font pango:Gohu GohuFont 9 
+font pango:xos4 Terminus 11 
+
+
 
 # main shortcuts
 floating_modifier $mod
@@ -188,15 +192,13 @@ bindsym --release Ctrl+S exec --no-startup-id scrot -q 100 /tmp/s.png && xclip -
 # bar
 bar {
 	tray_padding -1
-	height 12
+	height 14
 	strip_workspace_numbers no
-#       status_command i3status
-	status_command  python .config/i3/i3pystatus
-	#status_command python .config/i3/i3pystatus -t
+	status_command i3blocks -c .config/i3/i3blocks.conf
 	position top
 	mode dock
 	colors {
-		background	 $barbackground
+		background	$barbackground
 		statusline	$barstatusline
 		separator	$barseparator
 		focused_workspace  $focusedws1	$focusedws2	$focusedws3

@@ -4,7 +4,7 @@
 
 ! urxvt variables
 !URxvt.font: xft:xos4 terminus:size=9
-URxvt.font:  xft:Gohu GohuFont:style=regular:size=9:antialias=false
+URxvt.font: xft:bitocra13full:size=9:antialias=false
 URxvt.perl-ext:
 URxvt.perl-ext-common:
 URxvt.internalBorder: 8

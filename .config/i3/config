@@ -21,6 +21,18 @@ set_from_resource $focusedclient	i3wm.focusedclient      #000000
 set_from_resource $focusedinclient	i3wm.focusedinclient	#000000 
 set_from_resource $unfocusedclient	i3wm.unfocusedclient	#000000 
 
+# workspaces
+set $w1 1:net
+set $w2 2:term
+set $w3 3:dev
+set $w4 4:freeup
+set $w5 5:sdl
+set $w6 6:eval
+set $w7 7:control
+set $w8 8:manifacturing
+set $w9 9:interactive
+set $w10 10:void
+
 
 # main keybinder
 set $mod Mod4
@@ -28,7 +40,7 @@ set $mod Mod4
 
 # default apps
 set	$terminal		urxvtc
-set	$webbrowser		chromium
+set	$webbrowser		inox
 set	$filemanager		thunar
 set	$telegram		telegram-desktop
 
@@ -43,13 +55,14 @@ bindsym $mod+Shift+t	exec --no-startup-id $terminal
 bindsym $mod+d		exec --no-startup-id dmenu_run 
 
 # workspace assings
-assign [class="inox"]			$w1
+assign [class="Inox"]			$w1
 assign [class="jetbrains-idea-ce"]	$w3
 assign [class="jetbrains-idea"]		$w3
 assign [class="^telegram-desktop$"]	$w4
 assign [class="^Steam$"]		$w4
 assign [title="Steam"]			$w4
 assign [class="hl2_linux"]              $w5
+assign [class="dota2"]                  $w5
 assign [class="VBoxSDL"]		$w6
 
 
@@ -58,24 +71,15 @@ for_window [class="^Dunst$"] floating enable, border pixel 5
 for_window [window_role="pop-up"] floating enable
 for_window [window_role="(?i)telegram"] floating enable
 for_window [class="^Steam$"] border none
+ 
 
 
-# workspaces
-set $w1 1:net
-set $w2 2:term
-set $w3 3:dev
-set $w4 4:freeup
-set $w5 5:sdl
-set $w6 6:eval
-set $w7 7:control
-set $w8 8:manifacturing
-set $w9 9:interactive
-set $w10 10:void
 
 
 # startup apps
+exec --no-startup-id xrandr --dpi 96
 exec --no-startup-id setxkbmap tr
-exec --no-startup-id feh --bg-center Pictures/rei.jpg
+exec --no-startup-id feh --bg-center --ramdomize pictures/wallpapers/*
 exec --no-startup-id nm-applet
 exec --no-startup-id urxvtd -q -o -f
 #exec --no-startup-id sleep 1 && xgamma -gamma 0.85
@@ -88,7 +92,9 @@ exec --no-startup-id compton --config .config/compton/compton.conf
 # gaps
 gaps inner 12
 gaps outer 2
-
+workspace $w1 gaps inner 0
+workspace $w1 gaps outer 0
+smart_borders no_gaps
 
 # border colors
 client.focused		$focusedclient		$focusedclient		$focusedclient		$focusedclient
@@ -101,12 +107,15 @@ bindsym Mod1+Tab workspace next
 bindsym Mod1+Shift+Tab workspace prev
 bindsym $mod+Tab workspace back_and_forth
 
+# multimedia
+bindsym XF86AudioRaiseVolume exec amixer -q -D pulse sset Master 5%+
+bindsym XF86AudioLowerVolume exec amixer -q -D pulse sset Master 5%-
+
 
 #Powerline may not working	
 # font
-font pango:xos4 Terminus 11 
-
-
+#font pango:xos4 Terminus 11 
+font pango:bitocra13full 9
 
 # main shortcuts
 floating_modifier $mod
@@ -191,10 +200,10 @@ bindsym --release Ctrl+S exec --no-startup-id scrot -q 100 /tmp/s.png && xclip -
 
 # bar
 bar {
-	tray_padding -1
-	height 14
+	tray_padding 1 
+	height 15
 	strip_workspace_numbers no
-	status_command i3blocks -c .config/i3/i3blocks.conf
+	status_command i3blocks -c ~/.config/i3/i3blocks.conf
 	position top
 	mode dock
 	colors {

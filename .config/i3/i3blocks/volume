@@ -1,0 +1,37 @@
+#!/bin/bash
+
+STEP=5
+
+SINK=$(echo $(pactl list short sinks) | sed -e "{ s/^\(.\).*/\1/ ; q }")
+RLD="pulseaudio -k && sudo modprobe -rv snd-hda-intel &&  sudo modprobe -v snd-hda-intel"
+string='My long string'
+if [[ $(pactl list short) != *"SUSPENDED"* ]];
+then
+  SUF="patch=hda-jack-retask.fw,hda-jack-retask.fw,hda-jack-retask.fw,hda-jack-retask.fw"
+  USESUF=1
+else
+  SUF=""
+  USESUF=0
+fi
+
+
+case $BLOCK_BUTTON in
+  2) eval "$RLD $SUF"; sleep 0.7;;
+  3) pactl set-sink-mute $SINK toggle;;
+  4) pactl set-sink-volume $SINK +$STEP%;;
+  5) pactl set-sink-volume $SINK -$STEP%;;
+esac
+
+VOL=$(pactl list sinks | grep '^[[:space:]]Volume:' | head -n $(( $SINK + 1 )) | tail -n 1 | sed -e 's,.* \([0-9][0-9]*\)%.*,\1,')
+
+if [ $USESUF -eq 0 ]
+then
+  COLOR="#ffe218"
+else
+  COLOR="#D3DAE3"
+fi
+
+
+echo "vol:<span foreground='$COLOR'>$VOL</span>"
+
+

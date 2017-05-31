@@ -1,0 +1,8 @@
+#!/bin/bash
+OUT=$(acpi -b)
+PERCENT=$(echo $OUT | awk "{print $1}" | sed 's/\([^:]*\): \([^,]*\), \([0-9]*\)%.*/\3/')
+
+
+COLOR=$(echo $OUT | sed -E 's/^.*(Charging|Discharging|Full).*$/\1/;s/Charging/#FF0000/;s/Discharging/#FFFFFF/;s/Full/#00FF00/')
+
+echo "bat:<span foreground='$COLOR'>$PERCENT</span>"

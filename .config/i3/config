@@ -1,6 +1,6 @@
 ###			HexValid's i3-gaps config			###
 ##		  Based on ErkanMDR's and hbers's config		 ##
-#  Version: 0.5.2					   CodeName: iMa  #
+#  Version: 0.6.0					   CodeName: iMa  #
 
 set_from_resource $barbackground	i3wm.barbackground	#000000
 set_from_resource $barstatusline 	i3wm.barstatusline	#000000
@@ -24,8 +24,8 @@ set_from_resource $unfocusedclient	i3wm.unfocusedclient	#000000
 # workspaces
 set $w1 1:net
 set $w2 2:term
-set $w3 3:dev
-set $w4 4:freeup
+set $w3 3:dev@3
+set $w4 4:dev@4
 set $w5 5:sdl
 set $w6 6:eval
 set $w7 7:control
@@ -49,44 +49,56 @@ set	$telegram		telegram-desktop
 bindsym Ctrl+$mod+1	exec --no-startup-id $webbrowser
 bindsym Ctrl+$mod+2	exec --no-startup-id $filemanager
 bindsym Ctrl+$mod+3	exec --no-startup-id $telegram
+
+#DevTools
+bindsym Shift+Ctrl+$mod+1       exec --no-startup-id $terminal -e vim .config/i3/config
+bindsym Shift+Ctrl+$mod+3	exec --no-startup-id intellij-idea-ultimate-edition
+bindsym Shift+Ctrl+$mod+4       exec --no-startup-id android-studio
+bindsym Shift+Ctrl+$mod+5       exec --no-startup-id hdd/Android/SDK/tools/emulator -avd AEMU
+
+
 bindsym $mod+Shift+t	exec --no-startup-id $terminal
+bindsym $mod+t    	exec --no-startup-id $terminal -name freeterm -geometry 90x18
+
 
 #bindsym $mod+d		exec --no-startup-id dmenu_run -class 'dmenu' -fn 'Gohu GohuFont-9' -h 11 -l 0 -nb '$barbackground' -nf '$barstatusline'  -sb '$barbackground' -sf '$focusedws3'
 bindsym $mod+d		exec --no-startup-id dmenu_run 
 
 # workspace assings
-assign [class="Inox"]			$w1
-assign [class="jetbrains-idea-ce"]	$w3
-assign [class="jetbrains-idea"]		$w3
-assign [class="^telegram-desktop$"]	$w4
-assign [class="^Steam$"]		$w4
-assign [title="Steam"]			$w4
-assign [class="hl2_linux"]              $w5
-assign [class="dota2"]                  $w5
-assign [class="VBoxSDL"]		$w6
+assign [class="Inox"]				$w1
+assign [class="URxvt" instance="urxvt" ]	$w2
+assign [class="jetbrains-idea-ce"]		$w3
+assign [class="jetbrains-idea"]			$w3
+assign [class="jetbrains-studio"]		$w4
+#assign [class="^telegram-desktop$"]		$w5
+assign [class="^Steam$"]			$w5
+assign [title="Steam"]				$w5
+assign [class="hl2_linux"]              	$w6
+assign [class="dota2"]                  	$w6
+assign [class="VBoxSDL"]			$w7
 
 
 # special app configs
+for_window [class="URxvt" instance="freeterm$"] floating enable, border pixel 3
 for_window [class="^Dunst$"] floating enable, border pixel 5
 for_window [window_role="pop-up"] floating enable
 for_window [window_role="(?i)telegram"] floating enable
 for_window [class="^Steam$"] border none
- 
-
-
+for_window [title="Emulator"] floating enable, border none,move to workspace $w4
+for_window [title="Android Emulator(?i)"] floating enable, border pixel 3,move to workspace $w4
 
 
 # startup apps
 exec --no-startup-id xrandr --dpi 96
+exec --no-startup-id xrdb .Xresources
 exec --no-startup-id setxkbmap tr
-exec --no-startup-id feh --bg-center --ramdomize pictures/wallpapers/*
-exec --no-startup-id nm-applet
+exec --no-startup-id feh --bg-center --randomize pictures/wallpapers/*
 exec --no-startup-id urxvtd -q -o -f
+#exec --no-startup-id nm-applet
 #exec --no-startup-id sleep 1 && xgamma -gamma 0.85
 #exec --no-startup-id dunst
-exec --no-startup-id xrdb .Xresources
-exec --no-startup-id thunar --daemon
-exec --no-startup-id compton --config .config/compton/compton.conf
+#exec --no-startup-id thunar --daemon
+#exec --no-startup-id compton --config .config/compton/compton.conf
 
 
 # gaps
@@ -94,6 +106,14 @@ gaps inner 12
 gaps outer 2
 workspace $w1 gaps inner 0
 workspace $w1 gaps outer 0
+workspace $w2 gaps inner 20
+workspace $w2 gaps outer 80
+workspace $w3 gaps inner 0
+workspace $w3 gaps outer 0
+workspace $w4 gaps inner 0
+workspace $w4 gaps outer 0
+
+
 smart_borders no_gaps
 
 # border colors
@@ -115,8 +135,10 @@ bindsym XF86AudioLowerVolume exec amixer -q -D pulse sset Master 5%-
 #Powerline may not working	
 # font
 #font pango:xos4 Terminus 11 
-font pango:bitocra13full 9
-
+#font pango:bitocra13full 9
+#font pango:Roboto 11
+font pango:MonacoB2 Bold 10
+#font pango:Ubuntu Mono Bold 10
 # main shortcuts
 floating_modifier $mod
 bindsym $mod+q kill
@@ -201,19 +223,19 @@ bindsym --release Ctrl+S exec --no-startup-id scrot -q 100 /tmp/s.png && xclip -
 # bar
 bar {
 	tray_padding 1 
-	height 15
+	height 18
 	strip_workspace_numbers no
 	status_command i3blocks -c ~/.config/i3/i3blocks.conf
 	position top
 	mode dock
 	colors {
-		background	$barbackground
-		statusline	$barstatusline
-		separator	$barseparator
-		focused_workspace  $focusedws1	$focusedws2	$focusedws3
-		active_workspace   $activews1	$activews2	$activews3
-		inactive_workspace $inactivews1	$iactivews2	$inactivews3
-		urgent_workspace   $urgentws1	$urgentws2	$urgentws3
+		background	#313536
+		statusline	#FFFFFF
+		separator	#555555
+		focused_workspace  #2F65CA	#2F65CA		#FFFFFF
+		active_workspace   #313536	#313536		#FFFFFF
+		inactive_workspace #313536	#313536 	#BBBBBB
+		urgent_workspace   #FF6B68	#FF6B68		#FFFFFF
 		}
 }
 

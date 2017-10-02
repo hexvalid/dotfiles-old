@@ -6,30 +6,32 @@ partprobe /dev/sdb
 parted -a optimal /dev/sdb
 (parted) mklabel gpt
 (parted) unit mib
-(parted) mkpart ESP fat32 1 129
-(parted) set 1 boot on
-(parted) mkpart primary 129 32897
-(parted) name 2 root
-(parted) mkpart primary 32897 -1
-(parted) name 3 home
+(parted) mkpart primary 1 3
+(parted) name 1 grub
+(parted) set 1 bios_grub on
+(parted) mkpart primary 3 131
+(parted) name 2 boot
+(parted) mkpart primary 131 32899
+(parted) name 3 root
+(parted) mkpart primary 32899 -1
+(parted) name 4 home
 (parted) quit
 ```
 
 #### Dosya Sistemi oluşturma:
 ```
-mkfs.fat -F 32 /dev/sdb1
-mkfs.ext4 -E discard /dev/sdb2
+mkfs.fat -F 32 /dev/sdb2
 mkfs.ext4 -E discard /dev/sdb3
+mkfs.ext4 -E discard /dev/sdb4
 ```
 
 #### Mount:
 ```
 mkdir /mnt/gentoo/boot
-mkdir /mnt/gentoo/boot/efi
 mkdir /mnt/gentoo/home
-mount -o discard /dev/sdb2 /mnt/gentoo
-mount /dev/sdb1 /mnt/gentoo/boot/efi
-mount -o discard /dev/sdb3 /mnt/gentoo/home
+mount -o discard /dev/sdb3 /mnt/gentoo
+mount /dev/sd2 /mnt/gentoo/boot
+mount -o discard /dev/sdb4 /mnt/gentoo/home
 ```
 #### Stage Çıkartma:
 ```

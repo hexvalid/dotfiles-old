@@ -30,7 +30,7 @@ mkfs.ext4 -E discard /dev/sdb4
 mkdir /mnt/gentoo/boot
 mkdir /mnt/gentoo/home
 mount -o discard /dev/sdb3 /mnt/gentoo
-mount /dev/sd2 /mnt/gentoo/boot
+mount /dev/sdb2 /mnt/gentoo/boot
 mount -o discard /dev/sdb4 /mnt/gentoo/home
 ```
 #### Stage Çıkartma:

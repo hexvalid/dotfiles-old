@@ -169,7 +169,31 @@ passwd hexvalid
 
 #### X:
 ```
-emerge --ask --verbose x11-base/xorg-drivers -j 6
+emerge --ask --verbose x11-base/xorg-drivers -j 4
+```
+
+#### Ağ:
+```
+emerge --ask net-wireless/wpa_supplicant
+cp --verbose /usr/share/doc/${P}/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
+echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=wheel" >> /etc/wpa_supplicant/wpa_supplicant.conf
+echo "update_config=1" >> /etc/wpa_supplicant/wpa_supplicant.conf
+echo "modules_wlan0=\"wpa_supplicant\"" >> /etc/conf.d/net
+echo "config_wlan0=\"dhcp\"" >> /etc/conf.d/net
+```
+
+### Layman:
+```
+emerge --ask app-portage/layman -j 4
+echo PORTDIR_OVERLAY=\"\" > /var/lib/layman/make.conf
+layman -S
+layman -a 0x4d4c
+layman -a frabjous
+```
+
+### GUI:
+```
+
 ```
 
 #### Bitiriş:

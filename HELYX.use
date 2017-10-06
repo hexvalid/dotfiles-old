@@ -2,3 +2,4 @@ net-misc/iputils -caps -filecaps
 x11-drivers/xf86-video-intel dri3
 x11-base/xorg-server -minimal
 net-wireless/wpa_supplicant -ap -dbus -p2p -wps
+app-portage/layman sync-plugin-portage git

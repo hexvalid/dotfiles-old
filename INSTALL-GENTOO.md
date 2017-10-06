@@ -39,7 +39,9 @@ tar xvjpf stage3-amd64-20170907.tar.bz2 --xattrs --numeric-owner -C /mnt/gentoo/
 
 #### Portage Ayarı:
 ```
+rm /mnt/gentoo/etc/portage/package.use/*
 wget https://raw.githubusercontent.com/hexvalid/dotfiles/master/make.conf -O /mnt/gentoo/etc/portage/make.conf
+wget https://raw.githubusercontent.com/hexvalid/dotfiles/master/HELYX.use -O /mnt/gentoo/etc/portage/package.use/HELYX.use
 mkdir /mnt/gentoo/etc/portage/repos.conf
 cp /mnt/gentoo/usr/share/portage/config/repos.conf /mnt/gentoo/etc/portage/repos.conf/gentoo.conf
 ```
@@ -157,6 +159,17 @@ emerge --ask sys-boot/efibootmgr
 mount /sys/firmware/efi/efivars -o rw,remount
 efibootmgr -c -d /dev/sdb -p 1 -L "Gentoo" -l "\efi\gentoo\bzImage-(kernel_versiyonu).efi"
 mount /sys/firmware/efi/efivars -o ro,remount
+```
+
+#### Kullanıcı Ekle:
+```
+useradd -m -G audio,cdrom,portage,usb,users,video,wheel,audio -s /bin/bash hexvalid
+passwd hexvalid
+```
+
+#### X:
+```
+emerge --ask --verbose x11-base/xorg-drivers -j 6
 ```
 
 #### Bitiriş:

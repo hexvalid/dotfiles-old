@@ -6,32 +6,31 @@ partprobe /dev/sdb
 parted -a optimal /dev/sdb
 (parted) mklabel gpt
 (parted) unit mib
-(parted) mkpart primary 1 3
-(parted) name 1 grub
-(parted) set 1 bios_grub on
-(parted) mkpart primary 3 131
-(parted) name 2 boot
-(parted) mkpart primary 131 32899
-(parted) name 3 root
-(parted) mkpart primary 32899 -1
-(parted) name 4 home
+(parted) mkpart ESP fat32 1 129
+(parted) set 1 boot on
+(parted) mkpart primary 129 32897
+(parted) name 2 root
+(parted) mkpart primary 32897 -1
+(parted) name 3 home
 (parted) quit
 ```
 
 #### Dosya Sistemi oluşturma:
 ```
-mkfs.fat -F 32 /dev/sdb2
+mkfs.fat -F 32 /dev/sdb1
+mkfs.ext4 -E discard /dev/sdb2
 mkfs.ext4 -E discard /dev/sdb3
-mkfs.ext4 -E discard /dev/sdb4
 ```
 
 #### Mount:
 ```
+mount -o discard /dev/sdb2 /mnt/gentoo
 mkdir /mnt/gentoo/boot
+mount /dev/sdb1 /mnt/gentoo/boot
+mkdir /mnt/gentoo/boot/EFI
+mkdir /mnt/gentoo/boot/EFI/Gentoo
 mkdir /mnt/gentoo/home
-mount -o discard /dev/sdb3 /mnt/gentoo
-mount /dev/sdb2 /mnt/gentoo/boot
-mount -o discard /dev/sdb4 /mnt/gentoo/home
+mount -o discard /dev/sdb3 /mnt/gentoo/home
 ```
 #### Stage Çıkartma:
 ```
@@ -116,8 +115,10 @@ emerge --ask sys-kernel/linux-firmware
 #### Kernel ayarları (rezerved):
 ```
 cd /usr/src/linux
+wget https://raw.githubusercontent.com/hexvalid/dotfiles/master/HELYX-rc1.config -O .config
 make menuconfig
 ```
+*(EFI Stub'daki root=PARTUUID'si güncellenecek)*
 
 #### Kernel Derleme:
 ```
@@ -128,6 +129,11 @@ make -j8
 ```
 make modules_install
 make install
+```
+
+#### Bootloader imajı:
+```
+cp arch/x86/boot/bzImage /boot/EFI/Gentoo/bzImage-(kernel_versiyonu).efi
 ```
 
 #### fstab (rezerved):
@@ -148,9 +154,9 @@ emerge --ask net-misc/dhcpcd
 #### Bootloader:
 ```
 emerge --ask sys-boot/efibootmgr
-mkdir -p /boot/efi/boot
-cp /boot/vmlinuz-* /boot/efi/boot/bootx64.efi
-efibootmgr -c -d /dev/sdb -p 1 -L "Gentoo" -l "\efi\boot\bootx64.efi"
+mount /sys/firmware/efi/efivars -o rw,remount
+efibootmgr -c -d /dev/sdb -p 1 -L "Gentoo" -l "\efi\gentoo\bzImage-(kernel_versiyonu).efi"
+mount /sys/firmware/efi/efivars -o ro,remount
 ```
 
 #### Bitiriş:

@@ -120,7 +120,13 @@ cd /usr/src/linux
 wget https://raw.githubusercontent.com/hexvalid/dotfiles/master/HELYX-rc1.config -O .config
 make menuconfig
 ```
-*(EFI Stub'daki root=PARTUUID'si güncellenecek)*
+*EFI Stub'daki root=PARTUUID'si güncellenecek*
+
+#### Kernel Yamaları:
+```
+wget https://raw.githubusercontent.com/hexvalid/dotfiles/master/rtl8723be_4.12.patch
+patch drivers/net/wireless/realtek/rtlwifi/btcoexist/halbtc8723b2ant.c rtl8723be_4.12.patch
+```
 
 #### Kernel Derleme:
 ```
@@ -190,6 +196,7 @@ layman -S
 layman -a 0x4d4c
 layman -a frabjous
 ```
+*/etc/portage/make.conf dosyasındaki 'source /var/lib/layman/make.conf' satırının yorumu kalkacak*
 
 ### GUI:
 ```

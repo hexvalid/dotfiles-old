@@ -99,6 +99,7 @@ echo "LC_COLLATE=\"C\"" >> /etc/env.d/02locale
 ```
 env-update && source /etc/profile && export PS1="(chroot) $PS1"
 ```
+
 #### Linux Kernel Kaynak Kodunu Al:
 ```
 emerge --ask sys-kernel/gentoo-sources
@@ -106,8 +107,7 @@ emerge --ask sys-kernel/gentoo-sources
 
 #### Derleme Bağımlılıkları: (opsiyonel)
 ```
-emerge --ask sys-apps/pciutils
-emerge --ask sys-apps/usbutils
+emerge --ask sys-apps/pciutils sys-apps/usbutils -j 3
 ```
 #### Linux Kernel Firmwares:
 ```
@@ -154,9 +154,6 @@ nano /etc/fstab
 /etc/conf.d/hostname
 passwd
 nano /etc/conf.d/keymaps
-nano /etc/rc.conf
-
-emerge --ask net-misc/dhcpcd
 ```
 
 #### Bootloader:
@@ -176,16 +173,17 @@ passwd hexvalid
 #### X:
 ```
 emerge --ask --verbose x11-base/xorg-drivers -j 4
+emerge --ask --verbose x11-base/xorg-server
+emerge --ask --verbose x11-apps/setxkbmap
+env-update
+source /etc/profile
 ```
 
 #### Ağ:
 ```
-emerge --ask net-wireless/wpa_supplicant
-cp --verbose /usr/share/doc/${P}/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf
-echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=wheel" >> /etc/wpa_supplicant/wpa_supplicant.conf
-echo "update_config=1" >> /etc/wpa_supplicant/wpa_supplicant.conf
-echo "modules_wlan0=\"wpa_supplicant\"" >> /etc/conf.d/net
-echo "config_wlan0=\"dhcp\"" >> /etc/conf.d/net
+emerge --ask net-misc/wicd -j 8
+rc-update add wicd default
+echo "rc_hotplug=\"!net.*\"" >> /etc/rc.conf
 ```
 
 ### Layman:
@@ -198,9 +196,9 @@ layman -a frabjous
 ```
 */etc/portage/make.conf dosyasındaki 'source /var/lib/layman/make.conf' satırının yorumu kalkacak*
 
-### GUI:
+### i3:
 ```
-
+emerge -av x11-wm/i3-gaps x11-misc/i3blocks-gaps x11-misc/rofi media-gfx/feh -j 6
 ```
 
 #### Bitiriş:

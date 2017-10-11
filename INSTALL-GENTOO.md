@@ -196,9 +196,16 @@ layman -a frabjous
 ```
 */etc/portage/make.conf dosyasındaki 'source /var/lib/layman/make.conf' satırının yorumu kalkacak*
 
-### i3:
+### Desktop:
 ```
-emerge -av x11-wm/i3-gaps x11-misc/i3blocks-gaps x11-misc/rofi media-gfx/feh -j 6
+emerge -av x11-wm/i3-gaps x11-misc/i3blocks-gaps x11-terms/rxvt-unicode x11-misc/rofi media-gfx/feh -j 6
+```
+
+### Env:
+```
+emerge -av dev-java/oracle-jdk-bin dev-util/idea-ultimate -j 4
+emerge -av www-client/inox -j 20
+
 ```
 
 #### Bitiriş:

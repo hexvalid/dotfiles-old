@@ -175,6 +175,9 @@ passwd hexvalid
 emerge --ask --verbose x11-base/xorg-drivers -j 4
 emerge --ask --verbose x11-base/xorg-server
 emerge --ask --verbose x11-apps/setxkbmap
+emerge --ask --verbose x11-apps/xrandr
+emerge --ask --verbose x11-drivers/nvidia-drivers
+
 env-update
 source /etc/profile
 ```
@@ -193,6 +196,8 @@ echo PORTDIR_OVERLAY=\"\" > /var/lib/layman/make.conf
 layman -S
 layman -a 0x4d4c
 layman -a frabjous
+layman -a steam-overlay
+
 ```
 */etc/portage/make.conf dosyasındaki 'source /var/lib/layman/make.conf' satırının yorumu kalkacak*
 

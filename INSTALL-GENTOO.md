@@ -177,7 +177,9 @@ emerge --ask --verbose x11-base/xorg-server
 emerge --ask --verbose x11-apps/setxkbmap
 emerge --ask --verbose x11-apps/xrandr
 emerge --ask --verbose x11-drivers/nvidia-drivers
-
+echo "nvidia" >> /etc/modules-load.d/nvidia.conf
+rc-update add modules-load boot
+wget https://raw.githubusercontent.com/hexvalid/dotfiles/master/xorg.conf -O /etc/X11/xorg.conf
 env-update
 source /etc/profile
 ```

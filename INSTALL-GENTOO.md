@@ -199,7 +199,6 @@ layman -S
 layman -a 0x4d4c
 layman -a frabjous
 layman -a steam-overlay
-
 ```
 */etc/portage/make.conf dosyasındaki 'source /var/lib/layman/make.conf' satırının yorumu kalkacak*
 
@@ -212,7 +211,7 @@ emerge -av x11-wm/i3-gaps x11-misc/i3blocks-gaps x11-terms/rxvt-unicode x11-misc
 ```
 emerge -av dev-java/oracle-jdk-bin dev-util/idea-ultimate -j 4
 emerge -av www-client/inox -j 20
-
+emerge -av net-im/telegram-desktop-bin
 ```
 
 #### Bitiriş:

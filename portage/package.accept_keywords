@@ -1,1 +1,8 @@
-/etc/portage/package.accept_keywords
+www-client/inox ~amd64
+x11-wm/i3-gaps ~amd64
+x11-misc/i3blocks-gaps ~amd64
+dev-util/idea-ultimate ~amd64
+dev-lang/perl ~amd64
+games-util/steam-launcher ~amd64
+net-im/telegram-desktop-bin ~amd64
+sys-kernel/ck-sources ~amd64

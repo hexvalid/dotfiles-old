@@ -1,13 +1,16 @@
 #!/bin/bash
 
 
-function symlink() {
-	ln -sf /etc/portage/make.conf portage/
-	ln -sf /etc/portage/package.accept_keywords portage/
-	ln -sf /etc/portage/package.license portage/
-	ln -sf /etc/portage/package.use portage/
-	ln -sf /usr/src/linux/.config linux/
-	ln -sf /usr/src/linux/patches/ linux/
+function copy() {
+	mkdir -p portage
+	mkdir -p linux
+	mkdir -p linux/patches
+	cp -v /etc/portage/make.conf portage/
+	cp -v /etc/portage/package.accept_keywords portage/
+	cp -v /etc/portage/package.license portage/
+	cp -v /etc/portage/package.use portage/
+	cp -v /usr/src/linux/.config linux/
+	cp -v /usr/src/linux/patches/* linux/patches/
 }
 
 function install() {
@@ -19,8 +22,8 @@ function install() {
 
 
 case "$1" in
-      "symlink")
-        symlink
+      "copy")
+        copy
 	;;
       "install")
         install
@@ -32,7 +35,7 @@ case "$1" in
         echo "No argument value for option $OPTARG"
         ;;
       *)
-        echo "Usage: $0 {symlink|push|pull|install|version}"
+        echo "Usage: $0 {copy|push|pull|install|version}"
         exit 1
         ;;
 esac

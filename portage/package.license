@@ -1,1 +1,2 @@
-/etc/portage/package.license
+dev-java/oracle-jdk-bin Oracle-BCLA-JavaSE
+app-emulation/virtualbox-bin PUEL

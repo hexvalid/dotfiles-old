@@ -6,3 +6,4 @@ dev-lang/perl ~amd64
 games-util/steam-launcher ~amd64
 net-im/telegram-desktop-bin ~amd64
 sys-kernel/ck-sources ~amd64
+app-admin/stow ~amd64

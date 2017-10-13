@@ -1,0 +1,3 @@
+#!/bin/bash
+
+echo "alsa $BLOCK_INSTANCE $FORMAT"

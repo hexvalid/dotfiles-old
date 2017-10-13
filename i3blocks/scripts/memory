@@ -1,0 +1,13 @@
+#!/bin/bash
+
+USAGE=$(free -m | awk 'NR==2{printf "%s", $3}')
+
+if [ "$USAGE" -lt "8096" ]
+then
+	COLOR=#D3DAE3
+else
+	COLOR=#D64937
+fi
+
+echo "ram:<span foreground='$COLOR'>$USAGE</span>"
+

@@ -1,6 +1,0 @@
-#!/bin/bash
-
-DAT=$(curl 'https://www.dotabuff.com/players/431769895/matches' -so -) 
-WIN=$(echo $DAT | hxselect '.header-content-secondary span.game-record span.wins' -c)
-LOSE=$(echo $DAT | hxselect '.header-content-secondary span.game-record span.losses' -c)
-echo "<span foreground='#A9CF54'>$WIN</span>-<span foreground='#C23C2A'>$LOSE</span>"

@@ -1,3 +1,0 @@
-#!/bin/bash
-
-date "+<span foreground='#D3DAE3'>%d</span>.<span foreground='#D3DAE3'>%m</span>.<span foreground='#D3DAE3'>%Y</span> <span foreground='#D3DAE3'>%H</span>:<span foreground='#D3DAE3'>%M</span>"

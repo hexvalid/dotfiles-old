@@ -6,43 +6,25 @@ app-text/xmlto text
 x11-terms/rxvt-unicode unicode3 xft -perl
 dev-java/oracle-jdk-bin javafx -commercial -cups
 dev-util/idea-ultimate -custom-jdk
-x11-libs/libxcb abi_x86_32
-x11-proto/kbproto abi_x86_32
-x11-libs/libvdpau abi_x86_32
-x11-proto/inputproto abi_x86_32
-x11-proto/xextproto abi_x86_32
-x11-libs/libX11bi_x86_32
-sys-libs/zlib abi_x86_32
-x11-libs/libXdmcp abi_x86_32
-x11-libs/libXau abi_x86_32
-x11-libs/libXext abi_x86_32
-x11-proto/xproto abi_x86_32
-dev-libs/libpthread-stubs abi_x86_32
-x11-proto/xcb-proto abi_x86_32
-x11-proto/xf86bigfontproto abi_x86_32
-x11-libs/libX11 abi_x86_32
-x11-proto/xf86vidmodeproto abi_x86_32
-x11-proto/dri3proto abi_x86_32
-sys-devel/llvm abi_x86_32
-virtual/opengl abi_x86_32
-dev-libs/expat abi_x86_32
-x11-proto/xf86driproto abi_x86_32
-x11-libs/libdrm abi_x86_32
-x11-libs/libxshmfence abi_x86_32
-x11-libs/libXfixes abi_x86_32
-x11-libs/libXdamage abi_x86_32
-x11-proto/dri2proto abi_x86_32
-media-libs/mesa abi_x86_32
-sys-libs/ncurses abi_x86_32
-dev-libs/libffi abi_x86_32
-x11-proto/glproto abi_x86_32
-x11-proto/damageproto abi_x86_32
-x11-proto/presentproto abi_x86_32
-x11-proto/fixesproto abi_x86_32
-x11-libs/libXxf86vm abi_x86_32
-virtual/libffi abi_x86_32
 x11-drivers/nvidia-drivers driver multilib acpi -kms -uvm -tools -compat
 dev-libs/libxml2 python
 app-admin/sudo nls pam -sendmail -offensive openssl
 games-util/steam-launcher steamruntime
 games-util/steam-client-meta steamruntime
+
+
+
+sys-libs/zlib abi_x86_32
+x11-libs/libxcb abi_x86_32
+x11-libs/libXdmcp abi_x86_32
+x11-libs/libXext abi_x86_32
+x11-libs/libXau abi_x86_32
+x11-proto/xextproto abi_x86_32
+x11-proto/xf86bigfontproto abi_x86_32
+x11-proto/inputproto abi_x86_32
+x11-proto/xcb-proto abi_x86_32
+x11-proto/kbproto abi_x86_32
+x11-libs/libX11 abi_x86_32
+x11-libs/libvdpau abi_x86_32
+x11-proto/xproto abi_x86_32
+dev-libs/libpthread-stubs abi_x86_32

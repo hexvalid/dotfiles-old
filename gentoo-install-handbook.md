@@ -40,8 +40,10 @@ tar xvjpf stage3-amd64-20170907.tar.bz2 --xattrs --numeric-owner -C /mnt/gentoo/
 #### Portage Ayarı:
 ```
 rm /mnt/gentoo/etc/portage/package.use/*
-wget https://raw.githubusercontent.com/hexvalid/dotfiles/master/make.conf -O /mnt/gentoo/etc/portage/make.conf
-wget https://raw.githubusercontent.com/hexvalid/dotfiles/master/HELYX.use -O /mnt/gentoo/etc/portage/package.use/HELYX.use
+wget https://raw.githubusercontent.com/hexvalid/dotfiles/master/portage/etc/portage/make.conf -O /mnt/gentoo/etc/portage/make.conf
+wget https://raw.githubusercontent.com/hexvalid/dotfiles/master/portage/etc/portage/package.accept_keywords -O /mnt/gentoo/etc/portage/package.accept_keywords
+wget https://raw.githubusercontent.com/hexvalid/dotfiles/master/portage/etc/portage/package.license -O /mnt/gentoo/etc/portage/package.license
+wget https://raw.githubusercontent.com/hexvalid/dotfiles/master/portage/etc/portage/package.use -O /mnt/gentoo/etc/portage/package.use
 mkdir /mnt/gentoo/etc/portage/repos.conf
 cp /mnt/gentoo/usr/share/portage/config/repos.conf /mnt/gentoo/etc/portage/repos.conf/gentoo.conf
 ```

@@ -13,7 +13,7 @@ games-util/steam-launcher steamruntime
 games-util/steam-client-meta steamruntime
 
 
-
+#nvidia thigns:
 sys-libs/zlib abi_x86_32
 x11-libs/libxcb abi_x86_32
 x11-libs/libXdmcp abi_x86_32

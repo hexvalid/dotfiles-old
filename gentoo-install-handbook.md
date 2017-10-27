@@ -102,9 +102,9 @@ echo "LC_COLLATE=\"C\"" >> /etc/env.d/02locale
 env-update && source /etc/profile && export PS1="(chroot) $PS1"
 ```
 
-#### Linux Kernel Kaynak Kodunu Al:
+#### linux-ck Kaynak Kodunu Al:
 ```
-emerge --ask sys-kernel/gentoo-sources
+emerge --ask sys-kernel/ck-sources
 ```
 
 #### Derleme Bağımlılıkları: (opsiyonel)

@@ -1,11 +1,11 @@
 #!/bin/bash
 
 #-----------OPTIONS-----------#
-INSTALL_DISK="/dev/sdb"
+INSTALL_DISK="/dev/sda"
 
 
 #----------VARIABLES----------#
-TOTAL_JOB=20
+TOTAL_JOB=25
 BASE_URL=http://ftp.linux.org.tr/gentoo/releases/amd64/autobuilds/
 
 
@@ -56,6 +56,9 @@ parted -a optimal $INSTALL_DISK --script 'name 3 home'
 BOOT_PARTITION=${INSTALL_DISK}1
 ROOT_PARTITION=${INSTALL_DISK}2
 HOME_PARTITION=${INSTALL_DISK}3
+BOOT_PARTUUID=$(blkid $BOOT_PARTITION | cut -d '"' -f 8)
+ROOT_PARTUUID=$(blkid $ROOT_PARTITION | cut -d '"' -f 8)
+HOME_PARTUUID=$(blkid $HOME_PARTITION | cut -d '"' -f 8)
 sleep 0.2
 
 set_status 4 "Creating File Systems...."
@@ -72,7 +75,13 @@ mkdir /mnt/gentoo/boot/EFI
 mkdir /mnt/gentoo/boot/EFI/Gentoo
 mkdir /mnt/gentoo/home
 mount -o discard $HOME_PARTITION /mnt/gentoo/home
-sleep 0.2
+set_status 5 "Mounting other partitions...."
+mount -t proc /proc /mnt/gentoo/proc
+mount --rbind /sys /mnt/gentoo/sys
+mount --make-rslave /mnt/gentoo/sys
+mount --rbind /dev /mnt/gentoo/dev
+mount --make-rslave /mnt/gentoo/dev
+
 
 set_status 6 "Getting lastest stage's name...."
 LASTEST_STAGE_NAME=$(curl -s ${BASE_URL}latest-stage3-amd64.txt | tail -n 1 | cut -d " " -f 1)
@@ -106,23 +115,75 @@ wget https://raw.githubusercontent.com/hexvalid/dotfiles/master/portage/etc/port
 wget https://raw.githubusercontent.com/hexvalid/dotfiles/master/portage/etc/portage/package.use -O /mnt/gentoo/etc/portage/package.use
 mkdir /mnt/gentoo/etc/portage/repos.conf
 cp /mnt/gentoo/usr/share/portage/config/repos.conf /mnt/gentoo/etc/portage/repos.conf/gentoo.conf
-
-set_status 10 "Mounting partitions for chroot...."
 cp -L /etc/resolv.conf /mnt/gentoo/etc/
-mount -t proc /proc /mnt/gentoo/proc
-mount --rbind /sys /mnt/gentoo/sys
-mount --make-rslave /mnt/gentoo/sys
-mount --rbind /dev /mnt/gentoo/dev
-mount --make-rslave /mnt/gentoo/dev
 
-set status 11 "Emerge web rsync..."
+
+set status 10 "Emerge web rsync..."
 chroot_cmd "emerge-webrsync"
 
-set status 12 "Emerge sync..."
+set status 11 "Emerge sync..."
 chroot_cmd "emerge --sync"
 
-set status 13 "Setting profile..."
+set status 12 "Setting profile..."
 chroot_cmd "eselect profile set 1"
+
+set status 13 "Emerging portage..."
+chroot_cmd "emerge --oneshot portage"
+
+set status 14 "Emerging @world..."
+chroot_cmd "emerge --oneshot --update --deep --newuse @world -j 4"
+
+set status 15 "Setting up language, timezone and env..."
+echo "Europe/Istanbul" > /mnt/gentoo/etc/timezone
+chroot_cmd "emerge --config sys-libs/timezone-data"
+echo "en_US.UTF-8 UTF-8" >>  /mnt/gentoo/etc/locale.gen
+chroot_cmd "locale-gen"
+echo "LANG=\"en_US.UTF-8\"" > /mnt/gentoo/etc/env.d/02locale
+echo "LC_COLLATE=\"C\"" >> /mnt/gentoo/etc/env.d/02locale
+chroot_cmd "env-update"
+
+set status 16 "Emerging ck-sources..."
+chroot_cmd "emerge --oneshot sys-kernel/ck-sources"
+
+set status 17 "Emerging linux-firmware..."
+chroot_cmd "emerge --oneshot sys-kernel/linux-firmware"
+
+set status 18 "Emerging pciutils and usbutils..."
+chroot_cmd "emerge --oneshot sys-apps/pciutils sys-apps/usbutils -j 2"
+
+set status 19 "Configuring & patching kernel..."
+wget https://raw.githubusercontent.com/hexvalid/dotfiles/master/linux/usr/src/linux/.config -O /mnt/gentoo/usr/src/linux/.config
+sed -i -e "s/root=PARTUUID=_/root=PARTUUID=${ROOT_PARTUUID}/g" /mnt/gentoo/usr/src/linux/.config
+
+set status 20 "Compiling kernel..."
+chroot_cmd "cd /usr/src/linux/ && make -j8"
+
+set status 21 "Installing kernel, modules and bzImage..."
+chroot_cmd "cd /usr/src/linux/ && make modules_install && make install"
+cp /mnt/gentoo/usr/src/linux/arch/x86/boot/bzImage /mnt/gentoo/boot/EFI/Gentoo/bzImage.efi
+
+set status 22 "Generating fstab..."
+wget https://raw.githubusercontent.com/hexvalid/dotfiles/master/fstab -O /mnt/gentoo/etc/fstab
+sed -i -e "s/ROOT_PARTUUID/${ROOT_PARTUUID}/g" /mnt/gentoo/etc/fstab
+sed -i -e "s/BOOT_PARTUUID/${BOOT_PARTUUID}/g" /mnt/gentoo/etc/fstab
+sed -i -e "s/HOME_PARTUUID/${HOME_PARTUUID}/g" /mnt/gentoo/etc/fstab
+
+set status 23 "Setting up hostname,keymap,OpenRC and users..."
+sed -i -e "s/localhost/HEXTOO/g" /mnt/gentoo/etc/conf.d/hostname
+sed -i -e "s/keymap=\"us\"/keymap=\"trq\"/g" /mnt/gentoo/etc/conf.d/keymaps
+chroot_cmd "useradd -m -G audio,cdrom,portage,usb,users,video,wheel,audio -s /bin/bash hexvalid"
+chroot_cmd "echo "hexvalid:*" | chpasswd"
+chroot_cmd "echo "root:*" | chpasswd"
+echo "rc_hotplug=\"!net.*\"" >> /mnt/gentoo/etc/rc.conf
+
+
+set status 24 "Emerging efibootmgr..."
+chroot_cmd "emerge --oneshot sys-boot/efibootmgr"
+
+set status 25 "Creating EFI entity..."
+chroot_cmd "mount /sys/firmware/efi/efivars -o rw,remount"
+chroot_cmd 'efibootmgr -c -d $INSTALL_DISK -p 1 -L "Gentoo" -l "\efi\gentoo\bzImage.efi"'
+chroot_cmd "mount /sys/firmware/efi/efivars -o ro,remount"
 
 unmount_partitions
 

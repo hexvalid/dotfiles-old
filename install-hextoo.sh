@@ -20,11 +20,17 @@ if [ -z "$INTERNAL_INIT_SCRIPT" ]; then
 fi
 
 function chroot_cmd {
-   chroot /mnt/gentoo /bin/bash -c source /etc/profile && $1
+   chroot /mnt/gentoo /bin/bash -c "source /etc/profile && $1"
 }
 
 function set_status {
   screen -X hardstatus string " [$1/$TOTAL_JOB] $2"
+}
+
+function unmount_partitions {
+  umount -l /mnt/gentoo/dev{/shm,/pts,}
+  umount /dev/sdb1
+  umount -R /mnt/gentoo
 }
 
 
@@ -54,8 +60,8 @@ sleep 0.2
 
 set_status 4 "Creating File Systems...."
 mkfs.fat -F 32 $BOOT_PARTITION
-mkfs.ext4 -E discard $ROOT_PARTITION
-mkfs.ext4 -E discard $HOME_PARTITION
+mkfs.ext4 -F -E discard $ROOT_PARTITION
+mkfs.ext4 -F -E discard $HOME_PARTITION
 sleep 0.2
 
 set_status 5 "Mounting partitions...."
@@ -109,6 +115,15 @@ mount --make-rslave /mnt/gentoo/sys
 mount --rbind /dev /mnt/gentoo/dev
 mount --make-rslave /mnt/gentoo/dev
 
+set status 11 "Emerge web rsync..."
+chroot_cmd "emerge-webrsync"
 
+set status 12 "Emerge sync..."
+chroot_cmd "emerge --sync"
+
+set status 13 "Setting profile..."
+chroot_cmd "eselect profile set 1"
+
+unmount_partitions
 
 # Install some component

@@ -29,13 +29,11 @@ function set_status {
 
 
 set_status 1 "Clearing SSD's cells..."
-#hdparm --user-master u --security-set-pass NULL $INSTALL_DISK
-#hdparm --user-master u --security-erase-enhanced NULL $INSTALL_DISK
-sleep 0.2
+hdparm --user-master u --security-set-pass NULL $INSTALL_DISK
+hdparm --user-master u --security-erase-enhanced NULL $INSTALL_DISK
 
 set_status 2 "Partprobing $INSTALL_DISK..."
 partprobe $INSTALL_DISK
-sleep 0.2
 
 set_status 3 "Creating Partitions...."
 parted -a optimal $INSTALL_DISK --script 'mklabel gpt'
@@ -49,16 +47,12 @@ parted -a optimal $INSTALL_DISK --script 'name 3 home'
 BOOT_PARTITION=${INSTALL_DISK}1
 ROOT_PARTITION=${INSTALL_DISK}2
 HOME_PARTITION=${INSTALL_DISK}3
-BOOT_PARTUUID=$(blkid $BOOT_PARTITION | cut -d '"' -f 8)
-ROOT_PARTUUID=$(blkid $ROOT_PARTITION | cut -d '"' -f 8)
-HOME_PARTUUID=$(blkid $HOME_PARTITION | cut -d '"' -f 8)
-sleep 0.2
+
 
 set_status 4 "Creating File Systems...."
 mkfs.fat -F 32 $BOOT_PARTITION
 mkfs.ext4 -F -E discard $ROOT_PARTITION
 mkfs.ext4 -F -E discard $HOME_PARTITION
-sleep 0.2
 
 set_status 5 "Mounting partitions...."
 mount -o discard $ROOT_PARTITION /mnt/gentoo
@@ -144,8 +138,12 @@ set_status 18 "Emerging pciutils and usbutils..."
 chroot_cmd "emerge --oneshot sys-apps/pciutils sys-apps/usbutils -j 2"
 
 set_status 19 "Configuring & patching kernel..."
+BOOT_PARTUUID=$(blkid $BOOT_PARTITION | cut -d '"' -f 8)
+ROOT_PARTUUID=$(blkid $ROOT_PARTITION | cut -d '"' -f 8)
+HOME_PARTUUID=$(blkid $HOME_PARTITION | cut -d '"' -f 8)
 wget https://raw.githubusercontent.com/hexvalid/dotfiles/master/linux/usr/src/linux/.config -O /mnt/gentoo/usr/src/linux/.config
 sed -i -e "s/root=PARTUUID=_/root=PARTUUID=${ROOT_PARTUUID}/g" /mnt/gentoo/usr/src/linux/.config
+
 
 set_status 20 "Compiling kernel..."
 chroot_cmd "cd /usr/src/linux/ && make -j8"
@@ -166,7 +164,7 @@ sed -i -e "s/keymap=\"us\"/keymap=\"trq\"/g" /mnt/gentoo/etc/conf.d/keymaps
 chroot_cmd "useradd -m -G audio,cdrom,portage,usb,users,video,wheel,audio -s /bin/bash hexvalid"
 chroot_cmd "echo "hexvalid:*" | chpasswd"
 chroot_cmd "echo "root:*" | chpasswd"
-echo "rc_hotplug=\"!net.*\"" >> /mnt/gentoo/etc/rc.conf
+echo 'rc_hotplug="!net.*"' >> /mnt/gentoo/etc/rc.conf
 
 
 set_status 24 "Emerging efibootmgr..."
@@ -179,8 +177,6 @@ mount /sys/firmware/efi/efivars -o ro,remount
 
 set_status 26 "Unmouting partitions..."
 umount -l /mnt/gentoo/dev{/shm,/pts,}
-umount $BOOT_PARTITION
-umount $HOME_PARTITION
-umount $ROOT_PARTITION
+umount -l {$BOOT_PARTITION,$HOME_PARTITION,$ROOT_PARTITION,}
 
 # Install some component

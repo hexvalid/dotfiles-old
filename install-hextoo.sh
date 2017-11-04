@@ -19,6 +19,9 @@ if [ -z "$INTERNAL_INIT_SCRIPT" ]; then
   exit $ret
 fi
 
+function chroot_cmd {
+   chroot /mnt/gentoo /bin/bash -c source /etc/profile && $1
+}
 
 function set_status {
   screen -X hardstatus string " [$1/$TOTAL_JOB] $2"
@@ -68,8 +71,23 @@ sleep 0.2
 set_status 6 "Getting lastest stage's name...."
 LASTEST_STAGE_NAME=$(curl -s ${BASE_URL}latest-stage3-amd64.txt | tail -n 1 | cut -d " " -f 1)
 
-set_status 7 "Downloading lastest stage...."
-wget ${BASE_URL}$LASTEST_STAGE_NAME -O /tmp/latest-stage3-amd64.tar.bz2
+set_status 6 "Getting lastest stage's digest...."
+LASTEST_STAGE_DIGEST=$(curl -s ${BASE_URL}$LASTEST_STAGE_NAME.DIGESTS | head -2  |tail -1 | cut -d " " -f 1)
+
+if [ -f /tmp/latest-stage3-amd64.tar.bz2 ] && [[ $(sha512sum /tmp/latest-stage3-amd64.tar.bz2 | cut -d " " -f 1) == $LASTEST_STAGE_DIGEST ]]; then
+    set_status 7 "Using local stage...."
+    sleep 2
+else
+    set_status 7 "Downloading lastest stage...."
+    wget ${BASE_URL}$LASTEST_STAGE_NAME -O /tmp/latest-stage3-amd64.tar.bz2
+    STAGE_DIGEST=$(sha512sum /tmp/latest-stage3-amd64.tar.bz2 | cut -d " " -f 1)
+    if [ "$STAGE_DIGEST" != "$LASTEST_STAGE_DIGEST" ]; then
+        echo "Failed digest verification"
+	sleep 3
+	exit -1 #exit func
+    fi
+fi
+
 
 set_status 8 "Extracting stage...."
 tar xvjpf /tmp/latest-stage3-amd64.tar.bz2 --xattrs --numeric-owner -C /mnt/gentoo/

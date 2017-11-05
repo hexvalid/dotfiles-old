@@ -1,3 +1,3 @@
-PARTUUID=ROOT_PARTUUID   /               ext4            rw,noatime,data=ordered        0 1
-PARTUUID=BOOT_PARTUUID   /boot           vfat            rw,noatime,defaults            0 0
-PARTUUID=HOME_PARTUUID   /home           ext4            rw,noatime,data=ordered        0 2
+PARTUUID=ROOT_PARTUUID   /               ext4            defaults        0 1
+PARTUUID=BOOT_PARTUUID   /boot           vfat            defaults        0 0
+PARTUUID=HOME_PARTUUID   /home           ext4            defaults        0 2

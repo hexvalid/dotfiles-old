@@ -189,9 +189,24 @@ rm /mnt/gentoo/etc/conf.d/wpa_supplicant
 echo 'wpa_supplicant_args="-B -M -c/etc/wpa_supplicant/wpa_supplicant.conf"' >> /mnt/gentoo/etc/conf.d/wpa_supplicant
 chroot_cmd "rc-update add wpa_supplicant default"
 
+set_status 27 "Emerging xorg-server and xorg-drivers..."
+chroot_cmd "emerge --oneshot x11-base/xorg-drivers x11-base/xorg-server -j 6"
+set_status 28 "Emerging nvidia-drivers, xrandr and setxkbmap..."
+chroot_cmd "emerge --oneshot x11-apps/setxkbmap x11-apps/xrandr x11-drivers/nvidia-drivers -j 3"
 
 
-set_status 27 "Unmouting partitions..."
+set_status 29 "Configuring X..."
+echo "nvidia" >> /mnt/gentoo/etc/modules-load.d/nvidia.conf #BURDA KALDIN
+chroot_cmd "rc-update add modules-load boot"
+wget https://raw.githubusercontent.com/hexvalid/dotfiles/master/xorg.conf -O /mnt/gentoo/etc/X11/xorg.conf
+echo "xrandr --setprovideroutputsource modesetting NVIDIA-0" >>> /mnt/gentoo/home/hexvalid/.xinitrc
+echo "xrandr --auto" >>> /mnt/gentoo/home/hexvalid/.xinitrc
+echo "xrandr --dpi 96" >>> /mnt/gentoo/home/hexvalid/.xinitrc
+
+
+
+
+set_status 30 "Unmouting partitions..."
 chroot_cmd "sync"
 sync
 umount -l /mnt/gentoo/dev{/shm,/pts,}

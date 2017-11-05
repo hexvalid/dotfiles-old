@@ -177,10 +177,23 @@ chroot_cmd 'efibootmgr -c -d $INSTALL_DISK -p 1 -L "Gentoo" -l "\efi\gentoo\bzIm
 sleep 2
 chroot_cmd "mount /sys/firmware/efi/efivars -o ro,remount"
 sleep 1
+
+
+set_status 25 "Emerging dhcpcd and wpa_supplicant..."
+chroot_cmd "emerge --oneshot net-misc/dhcpcd net-wireless/wpa_supplicant -j 3"
+
+set_status 26 "Setting up network..."
+echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=wheel" >> /mnt/gentoo/etc/wpa_supplicant/wpa_supplicant.conf
+echo "update_config=1" >> /mnt/gentoo/etc/wpa_supplicant/wpa_supplicant.conf
+rm /mnt/gentoo/etc/conf.d/wpa_supplicant
+echo 'wpa_supplicant_args="-B -M -c/etc/wpa_supplicant/wpa_supplicant.conf"' >> /mnt/gentoo/etc/conf.d/wpa_supplicant
+chroot_cmd "rc-update add wpa_supplicant default"
+
+
+
+set_status 27 "Unmouting partitions..."
 chroot_cmd "sync"
 sync
-
-set_status 26 "Unmouting partitions..."
 umount -l /mnt/gentoo/dev{/shm,/pts,}
 umount -l {$BOOT_PARTITION,$HOME_PARTITION,$ROOT_PARTITION,}
 

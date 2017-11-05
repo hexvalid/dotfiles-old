@@ -5,7 +5,7 @@ INSTALL_DISK="/dev/sdX"
 
 
 #----------VARIABLES----------#
-TOTAL_JOB=26
+TOTAL_JOB=34
 BASE_URL=http://ftp.linux.org.tr/gentoo/releases/amd64/autobuilds/
 
 
@@ -196,17 +196,34 @@ chroot_cmd "emerge --oneshot x11-apps/setxkbmap x11-apps/xrandr x11-drivers/nvid
 
 
 set_status 29 "Configuring X..."
-echo "nvidia" >> /mnt/gentoo/etc/modules-load.d/nvidia.conf #BURDA KALDIN
+mkdir /mnt/gentoo/etc/modules-load.d/
+echo "nvidia" >> /mnt/gentoo/etc/modules-load.d/nvidia.conf
 chroot_cmd "rc-update add modules-load boot"
 wget https://raw.githubusercontent.com/hexvalid/dotfiles/master/xorg.conf -O /mnt/gentoo/etc/X11/xorg.conf
-echo "xrandr --setprovideroutputsource modesetting NVIDIA-0" >>> /mnt/gentoo/home/hexvalid/.xinitrc
-echo "xrandr --auto" >>> /mnt/gentoo/home/hexvalid/.xinitrc
-echo "xrandr --dpi 96" >>> /mnt/gentoo/home/hexvalid/.xinitrc
+echo "xrandr --setprovideroutputsource modesetting NVIDIA-0" >> /mnt/gentoo/home/hexvalid/.xinitrc
+echo "xrandr --auto" >> /mnt/gentoo/home/hexvalid/.xinitrc
+echo "xrandr --dpi 96" >> /mnt/gentoo/home/hexvalid/.xinitrc
+
+set_status 30 "Emerging layman..."
+chroot_cmd "emerge --oneshot app-portage/layman -j 5"
+
+set_status 31 "Configuring layman..."
+echo PORTDIR_OVERLAY=\"\" > /mnt/gentoo/var/lib/layman/make.conf
+sed -i '/source/s/^#//g' /mnt/gentoo/etc/portage/make.conf
+chroot_cmd "layman -S"
+chroot_cmd "yes | layman -a 0x4d4c frabjous"
+chroot_cmd "layman -S"
+
+set_status 32 "Emerging i3-gaps, i3blocks-gaps, rxvt-unicode, rofi and feh ..."
+chroot_cmd "emerge --oneshot x11-wm/i3-gaps x11-misc/i3blocks-gaps x11-terms/rxvt-unicode x11-misc/rofi media-gfx/feh -j 6"
+echo "exec i3" >> /mnt/gentoo/home/hexvalid/.xinitrc
+
+set_status 33 "Emerging inox..."
+chroot_cmd "emerge --oneshot www-client/inox -j 20"
 
 
 
-
-set_status 30 "Unmouting partitions..."
+set_status 34 "Unmouting partitions..."
 chroot_cmd "sync"
 sync
 umount -l /mnt/gentoo/dev{/shm,/pts,}

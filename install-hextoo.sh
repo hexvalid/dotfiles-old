@@ -171,9 +171,14 @@ set_status 24 "Emerging efibootmgr..."
 chroot_cmd "emerge --oneshot sys-boot/efibootmgr"
 
 set_status 25 "Creating EFI entity..."
-mount /sys/firmware/efi/efivars -o rw,remount
+chroot_cmd "mount /sys/firmware/efi/efivars -o rw,remount"
+sleep 2
 chroot_cmd 'efibootmgr -c -d $INSTALL_DISK -p 1 -L "Gentoo" -l "\efi\gentoo\bzImage.efi"'
-mount /sys/firmware/efi/efivars -o ro,remount
+sleep 2
+chroot_cmd "mount /sys/firmware/efi/efivars -o ro,remount"
+sleep 1
+chroot_cmd "sync"
+sync
 
 set_status 26 "Unmouting partitions..."
 umount -l /mnt/gentoo/dev{/shm,/pts,}

@@ -146,7 +146,7 @@ sed -i -e "s/root=PARTUUID=_/root=PARTUUID=${ROOT_PARTUUID}/g" /mnt/gentoo/usr/s
 
 
 set_status 20 "Compiling kernel..."
-chroot_cmd "cd /usr/src/linux/ && make -j8"
+chroot_cmd "cd /usr/src/linux/ && source /etc/portage/make.conf && make -j8"
 
 set_status 21 "Installing kernel, modules and bzImage..."
 chroot_cmd "cd /usr/src/linux/ && make modules_install && make install"

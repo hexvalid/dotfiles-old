@@ -5,7 +5,7 @@ INSTALL_DISK="/dev/sdX"
 
 
 #----------VARIABLES----------#
-TOTAL_JOB=34
+TOTAL_JOB=35
 BASE_URL=http://ftp.linux.org.tr/gentoo/releases/amd64/autobuilds/
 
 
@@ -171,31 +171,25 @@ set_status 24 "Emerging efibootmgr..."
 chroot_cmd "emerge --oneshot sys-boot/efibootmgr"
 
 set_status 25 "Creating EFI entity..."
-chroot_cmd "mount /sys/firmware/efi/efivars -o rw,remount"
-sleep 2
-chroot_cmd 'efibootmgr -c -d $INSTALL_DISK -p 1 -L "Gentoo" -l "\efi\gentoo\bzImage.efi"'
-sleep 2
-chroot_cmd "mount /sys/firmware/efi/efivars -o ro,remount"
-sleep 1
+chroot_cmd 'mount /sys/firmware/efi/efivars -o rw,remount && sleep 2 && efibootmgr -c -d $INSTALL_DISK -p 1 -L "Gentoo" -l "\efi\gentoo\bzImage.efi" && sleep 2 && mount /sys/firmware/efi/efivars -o ro,remount'
 
-
-set_status 25 "Emerging dhcpcd and wpa_supplicant..."
+set_status 26 "Emerging dhcpcd and wpa_supplicant..."
 chroot_cmd "emerge --oneshot net-misc/dhcpcd net-wireless/wpa_supplicant -j 3"
 
-set_status 26 "Setting up network..."
+set_status 27 "Setting up network..."
 echo "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=wheel" >> /mnt/gentoo/etc/wpa_supplicant/wpa_supplicant.conf
 echo "update_config=1" >> /mnt/gentoo/etc/wpa_supplicant/wpa_supplicant.conf
 rm /mnt/gentoo/etc/conf.d/wpa_supplicant
 echo 'wpa_supplicant_args="-B -M -c/etc/wpa_supplicant/wpa_supplicant.conf"' >> /mnt/gentoo/etc/conf.d/wpa_supplicant
 chroot_cmd "rc-update add wpa_supplicant default"
 
-set_status 27 "Emerging xorg-server and xorg-drivers..."
+set_status 28 "Emerging xorg-server and xorg-drivers..."
 chroot_cmd "emerge --oneshot x11-base/xorg-drivers x11-base/xorg-server -j 6"
-set_status 28 "Emerging nvidia-drivers, xrandr and setxkbmap..."
+set_status 29 "Emerging nvidia-drivers, xrandr and setxkbmap..."
 chroot_cmd "emerge --oneshot x11-apps/setxkbmap x11-apps/xrandr x11-drivers/nvidia-drivers -j 3"
 
 
-set_status 29 "Configuring X..."
+set_status 30 "Configuring X..."
 mkdir /mnt/gentoo/etc/modules-load.d/
 echo "nvidia" >> /mnt/gentoo/etc/modules-load.d/nvidia.conf
 chroot_cmd "rc-update add modules-load boot"
@@ -204,26 +198,28 @@ echo "xrandr --setprovideroutputsource modesetting NVIDIA-0" >> /mnt/gentoo/home
 echo "xrandr --auto" >> /mnt/gentoo/home/hexvalid/.xinitrc
 echo "xrandr --dpi 96" >> /mnt/gentoo/home/hexvalid/.xinitrc
 
-set_status 30 "Emerging layman..."
+set_status 31 "Emerging layman..."
 chroot_cmd "emerge --oneshot app-portage/layman -j 5"
 
-set_status 31 "Configuring layman..."
+set_status 32 "Configuring layman..."
 echo PORTDIR_OVERLAY=\"\" > /mnt/gentoo/var/lib/layman/make.conf
 sed -i '/source/s/^#//g' /mnt/gentoo/etc/portage/make.conf
 chroot_cmd "layman -S"
 chroot_cmd "yes | layman -a 0x4d4c frabjous"
 chroot_cmd "layman -S"
 
-set_status 32 "Emerging i3-gaps, i3blocks-gaps, rxvt-unicode, rofi and feh ..."
+set_status 33 "Emerging i3-gaps, i3blocks-gaps, rxvt-unicode, rofi and feh ..."
 chroot_cmd "emerge --oneshot x11-wm/i3-gaps x11-misc/i3blocks-gaps x11-terms/rxvt-unicode x11-misc/rofi media-gfx/feh -j 6"
 echo "exec i3" >> /mnt/gentoo/home/hexvalid/.xinitrc
+chroot_cmd "rc-update add dbus default"
 
-set_status 33 "Emerging inox..."
+
+set_status 34 "Emerging inox..."
 chroot_cmd "emerge --oneshot www-client/inox -j 20"
 
 
 
-set_status 34 "Unmouting partitions..."
+set_status 35 "Unmouting partitions..."
 chroot_cmd "sync"
 sync
 umount -l /mnt/gentoo/dev{/shm,/pts,}
